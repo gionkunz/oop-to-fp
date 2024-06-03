@@ -2,56 +2,42 @@
   Using the Class-based OOP behavior pattern
 */
 
-export interface Developing {
+
+export interface Developer {
   readonly lang: string;
-  develop(): void;
 }
 
-export class Developer implements Developing {
-  readonly lang = 'TypeScript';
-  develop() {
-    console.log(`Developing in ${this.lang}...`);
-  }
-}
-
-export interface Designing {
+export interface Designer {
   readonly color: string;
-  design(): void;
 }
 
-export class Designer implements Designing {
-  readonly color = 'blue';
-  design() {
-    console.log(`Designing in ${this.color}...`);
-  }
+export type DesignerAndDeveloper = Designer & Developer;
+
+export function develop(developer: Developer) {
+  console.log(`Developing in ${developer.lang}...`);
 }
 
-export class DeveloperDesigner implements Developing, Designing {
-  developer = new Developer();
-  designer = new Designer();
-
-  get color() {
-    return this.designer.color;
-  }
-
-  get lang() {
-    return this.developer.lang;
-  }
-
-  design(): void {
-    return this.designer.design();
-  }
-
-  develop(): void {
-    return this.developer.develop();
-  }
-
-  designAndDevelop() {
-    console.log(`Designing and developing something ${this.designer.color} in ${this.developer.lang}`);
-  }
+export function design(designer: Designer) {
+  console.log(`Designing in ${designer.color}...`);
 }
 
-const d = new DeveloperDesigner();
-d.develop();
-d.design();
-d.designAndDevelop();
+export function designAndDevelop(designerAndDeveloper: DesignerAndDeveloper) {
+  console.log(`Designing and developing something ${designerAndDeveloper.color} in ${designerAndDeveloper.lang}`);
+}
+
+const developer: Developer = {
+  lang: 'TypeScript'
+};
+
+const designer: Designer = {
+  color: 'blue'
+};
+
+const designingDeveloper: DesignerAndDeveloper = {
+  ...developer,
+  ...designer
+};
+
+develop(developer);
+design(designer);
+designAndDevelop(designingDeveloper);
