@@ -1,28 +1,53 @@
 /*
-  Better class-based OOP composability using some fine TS mixins :-)
+  Using the Class-based OOP behavior pattern
 */
 
-export type Constructor = new (...args: any[]) => {};
+export interface Developing {
+  readonly lang: string;
+  develop(): void;
+}
 
-export const developerMixin = <TBase extends Constructor>(Base: TBase = class {} as TBase) => 
-  class extends Base {
-    readonly lang = 'TypeScript';
-    develop() {
-      console.log(`Developing in ${this.lang}...`);
-    }
-  };
+export class Developer implements Developing {
+  readonly lang = 'TypeScript';
+  develop() {
+    console.log(`Developing in ${this.lang}...`);
+  }
+}
 
-export const designerMixin = <TBase extends Constructor>(Base: TBase = class {} as TBase) =>
-  class extends Base {
-    readonly color = 'blue';
-    design() {
-      console.log(`Designing in ${this.color}...`);
-    }
-  };
+export interface Designing {
+  readonly color: string;
+  design(): void;
+}
 
-export class DeveloperDesigner extends designerMixin(developerMixin()) {
+export class Designer implements Designing {
+  readonly color = 'blue';
+  design() {
+    console.log(`Designing in ${this.color}...`);
+  }
+}
+
+export class DeveloperDesigner implements Developing, Designing {
+  developer = new Developer();
+  designer = new Designer();
+
+  get color() {
+    return this.designer.color;
+  }
+
+  get lang() {
+    return this.developer.lang;
+  }
+
+  design(): void {
+    return this.designer.design();
+  }
+
+  develop(): void {
+    return this.developer.develop();
+  }
+
   designAndDevelop() {
-    console.log(`Designing and developing something ${this.color} in ${this.lang}`);
+    console.log(`Designing and developing something ${this.designer.color} in ${this.developer.lang}`);
   }
 }
 
